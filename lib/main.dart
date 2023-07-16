@@ -3,6 +3,11 @@ import 'package:my_first_flutter_app/rating_widget.dart';
 import 'package:my_first_flutter_app/rating_widget_2.dart';
 import 'package:my_first_flutter_app/rating_widget_3.dart';
 
+/**
+ * In this sample app a rating popup is implemented when pushing the
+ * button. To review the rating results just look in the console.
+ */
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -16,10 +21,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void createWidget() {
     setState(() {
       dynamicWidgets.add(RatingWidgetThree(
-        title: 'popup',
         onSubmit: (
             List<double> ratings) =>
-            print("Cleanilesss " + ratings[0].toString() +
+            print("Cleaniless " + ratings[0].toString() +
                 " Availability " + ratings[1].toString() +
                 " Overall Experience " + ratings[2].toString()),
       ),);
