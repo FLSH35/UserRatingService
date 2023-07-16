@@ -18,6 +18,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<Widget> dynamicWidgets = [];
 
+  /**
+   * This widget class lets you rate the service in three different categories:
+   * Cleanliness, Availability, Overall Experience
+   *
+   * When creating an object of this class you need to provide a function as a
+   * parameter. This is import for the return-List of the rating-results.
+   */
   void createWidget() {
     setState(() {
       dynamicWidgets.add(RatingWidgetThree(
