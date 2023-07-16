@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class MyHomePage extends StatefulWidget {
+class RatingWidgetTwo extends StatefulWidget {
   final String title;
   final Function(List<double>) onSubmit;
 
-  MyHomePage({
+  RatingWidgetTwo({
     Key? key,
     required this.title,
     required this.onSubmit,
   }) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _RatingWidgetTwoState createState() => _RatingWidgetTwoState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  void showPopup(BuildContext context) async {
-    List<String> popupTitles = ['Cleanliness', 'Availability', 'Overall Experience'];
-    List<double> ratings = [0, 0, 0];
+List<String> popupTitles = ['Cleanliness', 'Availability', 'Overall Experience'];
+List<double> ratings = [0, 0, 0];
 
-    for (int i = 0; i < 3; i++) {
+class _RatingWidgetTwoState extends State<RatingWidgetTwo> {
+  void showPopup(BuildContext context) async {
+
+
+    for (int i = 1; i < 3; i++) {
       await showDialog(
         context: context,
         builder: (context) => RatingPopup(
@@ -35,29 +37,57 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
     widget.onSubmit(ratings);
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+    List<Widget> dynamicWidgets = [];
+
+    return AlertDialog(
+      title: Text(popupTitles[0]),
+      content:
+      Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[],
+          children: [
+            RatingBar.builder(
+              initialRating: ratings[0],
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: false,
+              itemCount: 5,
+              itemSize: 30,
+              itemBuilder: (context, _) => const Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+                setState(() {
+                  ratings[0] = rating;
+                });
+              },
+            ),
+            Column(
+              children: dynamicWidgets,
+            ),
+          ],
         ),
+
       ),
-      floatingActionButton: Container(
-        alignment: Alignment.center,
-        child: FloatingActionButton(
+
+
+      actions: [
+        TextButton(
+          child: const Text('SUBMIT'),
           onPressed: () {
             showPopup(context);
+            // Close the dialog
           },
-          child: const Icon(Icons.star_rate_rounded),
         ),
-      ),
+      ],
     );
   }
-
 }
 
 class RatingPopup extends StatelessWidget {
