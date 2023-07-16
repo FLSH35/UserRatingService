@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_first_flutter_app/rating_widget.dart';
 import 'package:my_first_flutter_app/rating_widget_2.dart';
+import 'package:my_first_flutter_app/rating_widget_3.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void createWidget() {
     setState(() {
-      dynamicWidgets.add(RatingWidgetTwo(
+      dynamicWidgets.add(RatingWidgetThree(
         title: 'popup',
         onSubmit: (
             List<double> ratings) =>

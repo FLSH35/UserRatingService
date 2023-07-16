@@ -1,130 +1,111 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class RatingWidgetTwo extends StatefulWidget {
+class RatingWidgetThree extends StatefulWidget {
   final String title;
   final Function(List<double>) onSubmit;
 
-  RatingWidgetTwo({
+  RatingWidgetThree({
     Key? key,
     required this.title,
     required this.onSubmit,
   }) : super(key: key);
 
   @override
-  _RatingWidgetTwoState createState() => _RatingWidgetTwoState();
+  _RatingWidgetThreeState createState() => _RatingWidgetThreeState();
 }
+class _RatingWidgetThreeState extends State<RatingWidgetThree> {
+  List<String> popupTitles = ['Cleanliness', 'Availability', 'Overall Experience'];
+  List<double> ratings = [1, 1, 1];
+  List<Widget> dynamicWidgets = [];
+  int ratingIndex = 0;
 
-List<String> popupTitles = ['Cleanliness', 'Availability', 'Overall Experience'];
-List<double> ratings = [0, 0, 0];
+  @override
+  void initState() {
+    super.initState();
+    dynamicWidgets.add(
+      Column(
+        children: [
+          Text(popupTitles[0]),
+          RatingBar.builder(
+            initialRating: ratings[0],
+            minRating: 1,
+            direction: Axis.horizontal,
+            allowHalfRating: false,
+            itemCount: 5,
+            itemSize: 30,
+            itemBuilder: (context, _) => const Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+            onRatingUpdate: (rating) {
+              setState(() {
+                ratings[0] = rating;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
-class _RatingWidgetTwoState extends State<RatingWidgetTwo> {
-  void showPopup(BuildContext context) async {
-
-
-    for (int i = 1; i < 3; i++) {
-      await showDialog(
-        context: context,
-        builder: (context) => RatingPopup(
-          title: popupTitles[i],
-          initialRating: ratings[i],
-          onRatingUpdate: (rating) {
-            setState(() {
-              ratings[i] = rating;
-            });
-          },
-        ),
-      );
-    }
-    widget.onSubmit(ratings);
+  void removeWidget() {
+    setState(() {
+      dynamicWidgets.clear();
+    });
     Navigator.of(context).pop();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> dynamicWidgets = [];
+  void pressedSubmit() {
+    ratingIndex++;
+    if (ratingIndex < popupTitles.length) {
 
-    return AlertDialog(
-      title: Text(popupTitles[0]),
-      content:
-      Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RatingBar.builder(
-              initialRating: ratings[0],
-              minRating: 1,
-              direction: Axis.horizontal,
-              allowHalfRating: false,
-              itemCount: 5,
-              itemSize: 30,
-              itemBuilder: (context, _) => const Icon(
-                Icons.star,
-                color: Colors.amber,
+
+      setState(() {
+        dynamicWidgets.add(
+          Column(
+            children: [
+              Text(popupTitles[ratingIndex]),
+              RatingBar.builder(
+                initialRating: ratings[ratingIndex],
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: false,
+                itemCount: 5,
+                itemSize: 30,
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                onRatingUpdate: (rating) {
+                  setState(() {
+                    ratings[ratingIndex] = rating;
+                  });
+                },
               ),
-              onRatingUpdate: (rating) {
-                setState(() {
-                  ratings[0] = rating;
-                });
-              },
-            ),
-            Column(
-              children: dynamicWidgets,
-            ),
-          ],
-        ),
-
-      ),
-
-
-      actions: [
-        TextButton(
-          child: const Text('SUBMIT'),
-          onPressed: () {
-            showPopup(context);
-            // Close the dialog
-          },
-        ),
-      ],
-    );
+            ],
+          ),
+        );
+        dynamicWidgets.removeAt(0);
+      });
+    } else {
+      removeWidget();
+      widget.onSubmit(ratings);
+    }
   }
-}
-
-class RatingPopup extends StatelessWidget {
-  final String title;
-  final double initialRating;
-  final ValueChanged<double> onRatingUpdate;
-
-  const RatingPopup({
-    Key? key,
-    required this.title,
-    required this.initialRating,
-    required this.onRatingUpdate,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
-      content: RatingBar.builder(
-        initialRating: initialRating,
-        minRating: 1,
-        direction: Axis.horizontal,
-        allowHalfRating: false,
-        itemCount: 5,
-        itemSize: 30,
-        itemBuilder: (context, _) => const Icon(
-          Icons.star,
-          color: Colors.amber,
-        ),
-        onRatingUpdate: onRatingUpdate,
+      content: Column(
+        children: dynamicWidgets,
       ),
       actions: [
         TextButton(
           child: const Text('SUBMIT'),
           onPressed: () {
-            Navigator.of(context).pop(); // Close the dialog
-          },
+            pressedSubmit();
+          }
         ),
       ],
     );
